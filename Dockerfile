@@ -13,12 +13,14 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache
 
-CMD chmod -R 777 storage bootstrap/cache && \
+CMD echo "Starting..." && \
+    echo "PORT is: $PORT" && \
+    echo "DB_HOST is: $DB_HOST" && \
     php artisan config:clear && \
+    echo "Config cleared" && \
     php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php -S 0.0.0.0:${PORT:-8000} -t public
+    echo "Migrated" && \
+    php -S 0.0.0.0:${PORT:-8080} -t public && \
+    echo "Server started"
