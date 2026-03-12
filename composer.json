@@ -83,7 +83,8 @@
         },
         "platform": {
         "php": "8.4.0",
-        "ext-gd": "1.0.0"
+        "ext-gd": "1.0.0",
+        "ext-zip": "1.0.0"
     }
     },
     "minimum-stability": "stable",
