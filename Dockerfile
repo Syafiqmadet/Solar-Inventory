@@ -15,7 +15,10 @@ RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 RUN chmod -R 777 storage bootstrap/cache
 
+RUN rm -f bootstrap/cache/config.php bootstrap/cache/routes*.php bootstrap/cache/services.php
+
 CMD chmod -R 777 storage bootstrap/cache && \
+    rm -f bootstrap/cache/config.php && \
     php artisan config:clear && \
     php artisan cache:clear && \
     php artisan migrate --force && \
