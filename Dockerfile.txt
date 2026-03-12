@@ -1,0 +1,32 @@
+FROM php:8.4-cli
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git curl zip unzip libpng-dev libzip-dev libxml2-dev libonig-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring xml ctype fileinfo zip gd \
+    && apt-get clean
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy project files
+COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+
+# Set permissions
+RUN chmod -R 775 storage bootstrap/cache
+
+# Expose port
+EXPOSE 8080
+
+# Start Laravel
+CMD php artisan migrate --force && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php -S 0.0.0.0:8080 -t public
