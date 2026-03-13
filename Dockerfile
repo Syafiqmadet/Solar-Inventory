@@ -17,12 +17,6 @@ RUN chmod -R 777 storage bootstrap/cache
 
 RUN rm -f bootstrap/cache/config.php bootstrap/cache/routes*.php bootstrap/cache/services.php
 
-CMD chmod -R 777 storage bootstrap/cache && \
-    rm -f bootstrap/cache/config.php && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php -S 0.0.0.0:${PORT:-8080} -t public
+ENTRYPOINT ["/bin/sh", "-c"]
+
+CMD ["chmod -R 777 storage bootstrap/cache && php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php -S 0.0.0.0:${PORT:-8080} -t public"]
