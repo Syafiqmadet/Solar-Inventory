@@ -185,7 +185,7 @@
                                     <input type="text" name="rows[0][item_name]" class="form-control form-control-sm mt-1 item-name" placeholder="Item name *" required>
                                 </td>
                                 <td><input type="text" name="rows[0][part_number]" class="form-control form-control-sm item-part" placeholder="Part no."></td>
-                                <td><input type="number" name="rows[0][quantity]" class="form-control form-control-sm qty-input" step="0.01" min="0.01" required>
+                                <td><input type="number" name="rows[0][quantity]" class="form-control form-control-sm qty-input" step="1" min="1" required>
                                 <small class="text-muted stock-hint"></small></td>
                                 <td><input type="text" name="rows[0][unit]" class="form-control form-control-sm item-unit" placeholder="pcs"></td>
                                 <td><input type="text" name="rows[0][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
@@ -240,7 +240,7 @@ document.getElementById('addMifRow').addEventListener('click', function() {
             <input type="text" name="rows[${idx}][item_name]" class="form-control form-control-sm mt-1 item-name" placeholder="Item name *" required>
         </td>
         <td><input type="text" name="rows[${idx}][part_number]" class="form-control form-control-sm item-part" placeholder="Part no."></td>
-        <td><input type="number" name="rows[${idx}][quantity]" class="form-control form-control-sm qty-input" step="0.01" min="0.01" required>
+        <td><input type="number" name="rows[${idx}][quantity]" class="form-control form-control-sm qty-input" step="1" min="1" required>
             <small class="text-muted stock-hint"></small></td>
         <td><input type="text" name="rows[${idx}][unit]" class="form-control form-control-sm item-unit" placeholder="pcs"></td>
         <td><input type="text" name="rows[${idx}][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
@@ -315,10 +315,24 @@ document.addEventListener('change', function(e) {
         const qtyInput = row.querySelector('.qty-input');
         const hint = row.querySelector('.stock-hint');
         if (qtyInput) {
-            qtyInput.max = stock;
-            if (parseFloat(qtyInput.value) > stock) qtyInput.value = stock;
+            if (sel.value && stock > 0) {
+                qtyInput.max = stock;
+                if (parseFloat(qtyInput.value) > stock) qtyInput.value = stock;
+            } else {
+                qtyInput.removeAttribute('max');
+            }
         }
-        if (hint) hint.textContent = stock > 0 ? 'Available: ' + stock : 'Out of stock';
+        if (hint) {
+            if (!sel.value) {
+                hint.textContent = '';
+            } else if (stock > 0) {
+                hint.textContent = 'Available: ' + stock;
+                hint.className = 'text-success stock-hint';
+            } else {
+                hint.textContent = 'Out of stock';
+                hint.className = 'text-danger stock-hint';
+            }
+        }
     }
 });
 </script>
