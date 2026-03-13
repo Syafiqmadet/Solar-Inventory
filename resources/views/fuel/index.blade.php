@@ -28,7 +28,7 @@
             
         
         @if($canWrite)
-        <a href="{{ route('fuel.create') }}" class="btn btn-light fw-semibold">
+        <a href="{{ route('fuel.create') }}" class="btn btn-success fw-semibold me-2">
             <i class="bi bi-plus-circle me-2"></i>Add Fuel Record
         </a>
         @endif
