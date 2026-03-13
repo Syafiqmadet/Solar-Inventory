@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->web(append: [
+
+     $middleware->prepend(\App\Http\Middleware\TrustProxies::class);
+            
+            $middleware->web(append: [
             \App\Http\Middleware\ShareViewData::class,
         ]);
 
@@ -19,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'writer'  => \App\Http\Middleware\RequireWriteAccess::class,
             'project' => \App\Http\Middleware\RequireProject::class,
         ]);
+
+        
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
