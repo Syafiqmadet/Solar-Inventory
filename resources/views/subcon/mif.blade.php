@@ -208,7 +208,7 @@
 <script>
 let mifRowIndex = 1;
 
-const mifItemOptions = `@foreach($items as $item)<option value="{{ $item->id }}" data-name="{{ $item->name }}" data-part="{{ $item->part_number }}" data-unit="{{ $item->unit }}" data-stock="{{ $item->current_stock }}">{{ $item->name }}@if($item->part_number) ({{ $item->part_number }})@endif — Stock: {{ $item->current_stock }}</option>@endforeach`;
+const mifItemOptions = `@foreach($items as $item)<option value="{{ $item->id }}" data-name="{{ $item->name }}" data-part="{{ $item->part_number }}" data-unit="{{ $item->unit }}" data-stock="{{ $item->current_stock }}" data-min="{{ $item->min_stock ?? 0 }}">{{ $item->name }}@if($item->part_number) ({{ $item->part_number }})@endif — Stock: {{ $item->current_stock }}</option>@endforeach`;
 
 function bindItemSelect(row) {
     row.querySelector('.item-select').addEventListener('change', function() {
@@ -325,12 +325,19 @@ document.addEventListener('change', function(e) {
         if (hint) {
             if (!sel.value) {
                 hint.textContent = '';
-            } else if (stock > 0) {
-                hint.textContent = 'Available: ' + stock;
-                hint.className = 'text-success stock-hint';
+                hint.className = 'stock-hint';
+            } else if (stock <= 0) {
+                hint.textContent = '⛔ Out of stock';
+                hint.className = 'text-danger fw-semibold stock-hint';
             } else {
-                hint.textContent = 'Out of stock';
-                hint.className = 'text-danger stock-hint';
+                const minStock = parseFloat(sel.options[sel.selectedIndex]?.dataset.min ?? 0);
+                if (minStock > 0 && stock <= minStock) {
+                    hint.textContent = '⚠️ Low stock: ' + stock + ' remaining';
+                    hint.className = 'text-warning fw-semibold stock-hint';
+                } else {
+                    hint.textContent = '✅ Available: ' + stock;
+                    hint.className = 'text-success stock-hint';
+                }
             }
         }
     }

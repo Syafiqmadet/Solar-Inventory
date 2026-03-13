@@ -79,7 +79,7 @@ class SubconController extends Controller
     public function mifIndex(Subcon $subcon)
     {
         $mifs  = $subcon->mifs()->with('items','issuedBy')->orderByDesc('date')->get();
-        $items = Item::where('project_id', $this->pid())->orderBy('name')->get();
+        $items = Item::where('project_id', $this->pid())->where('current_stock', '>', 0)->orderBy('name')->get();
         return view('subcon.mif', compact('subcon','mifs','items'));
     }
 
@@ -96,7 +96,7 @@ class SubconController extends Controller
             'rows.*.title'          => 'nullable|string|max:255',
             'rows.*.item_id'        => 'nullable|exists:items,id',
             'rows.*.item_name'      => 'required|string',
-            'rows.*.quantity'       => 'required|numeric|min:0.01',
+            'rows.*.quantity'       => 'required|integer|min:1',
             'rows.*.unit'           => 'nullable|string|max:50',
             'rows.*.remarks'        => 'nullable|string',
         ], [
@@ -247,7 +247,7 @@ class SubconController extends Controller
             'rows.*.title'          => 'nullable|string|max:255',
             'rows.*.item_id'        => 'nullable|exists:items,id',
             'rows.*.item_name'      => 'required|string',
-            'rows.*.quantity'       => 'required|numeric|min:0.01',
+            'rows.*.quantity'       => 'required|integer|min:1',
             'rows.*.unit'           => 'nullable|string|max:50',
             'rows.*.condition'      => 'required|in:good,damaged,defect',
             'rows.*.remarks'        => 'nullable|string',
