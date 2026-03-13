@@ -103,6 +103,18 @@ class SubconController extends Controller
             'mif_number.unique' => 'This MIF number already exists. Each MIF and MRF number must be unique.',
         ]);
 
+        // Validate stock availability before transaction
+        foreach ($request->rows as $row) {
+            if (!empty($row['item_id'])) {
+                $item = Item::find($row['item_id']);
+                if ($item && $row['quantity'] > $item->current_stock) {
+                    return back()->withInput()->withErrors([
+                        'rows' => 'Item "' . $row['item_name'] . '" — requested qty (' . $row['quantity'] . ') exceeds available stock (' . $item->current_stock . ' ' . ($item->unit ?? 'units') . ').'
+                    ]);
+                }
+            }
+        }
+
         DB::transaction(function () use ($request, $subcon) {
             $mif = SubconMif::create([
                 'mif_number' => $request->mif_number,

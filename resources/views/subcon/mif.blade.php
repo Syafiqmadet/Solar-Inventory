@@ -185,7 +185,8 @@
                                     <input type="text" name="rows[0][item_name]" class="form-control form-control-sm mt-1 item-name" placeholder="Item name *" required>
                                 </td>
                                 <td><input type="text" name="rows[0][part_number]" class="form-control form-control-sm item-part" placeholder="Part no."></td>
-                                <td><input type="number" name="rows[0][quantity]" class="form-control form-control-sm" step="0.01" min="0.01" required></td>
+                                <td><input type="number" name="rows[0][quantity]" class="form-control form-control-sm qty-input" step="0.01" min="0.01" required>
+                                <small class="text-muted stock-hint"></small></td>
                                 <td><input type="text" name="rows[0][unit]" class="form-control form-control-sm item-unit" placeholder="pcs"></td>
                                 <td><input type="text" name="rows[0][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
                                 <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-x"></i></button></td>
@@ -207,7 +208,7 @@
 <script>
 let mifRowIndex = 1;
 
-const mifItemOptions = `@foreach($items as $item)<option value="{{ $item->id }}" data-name="{{ $item->name }}" data-part="{{ $item->part_number }}" data-unit="{{ $item->unit }}">{{ $item->name }}@if($item->part_number) ({{ $item->part_number }})@endif</option>@endforeach`;
+const mifItemOptions = `@foreach($items as $item)<option value="{{ $item->id }}" data-name="{{ $item->name }}" data-part="{{ $item->part_number }}" data-unit="{{ $item->unit }}" data-stock="{{ $item->current_stock }}">{{ $item->name }}@if($item->part_number) ({{ $item->part_number }})@endif — Stock: {{ $item->current_stock }}</option>@endforeach`;
 
 function bindItemSelect(row) {
     row.querySelector('.item-select').addEventListener('change', function() {
@@ -239,7 +240,8 @@ document.getElementById('addMifRow').addEventListener('click', function() {
             <input type="text" name="rows[${idx}][item_name]" class="form-control form-control-sm mt-1 item-name" placeholder="Item name *" required>
         </td>
         <td><input type="text" name="rows[${idx}][part_number]" class="form-control form-control-sm item-part" placeholder="Part no."></td>
-        <td><input type="number" name="rows[${idx}][quantity]" class="form-control form-control-sm" step="0.01" min="0.01" required></td>
+        <td><input type="number" name="rows[${idx}][quantity]" class="form-control form-control-sm qty-input" step="0.01" min="0.01" required>
+            <small class="text-muted stock-hint"></small></td>
         <td><input type="text" name="rows[${idx}][unit]" class="form-control form-control-sm item-unit" placeholder="pcs"></td>
         <td><input type="text" name="rows[${idx}][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
         <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-x"></i></button></td>
@@ -302,4 +304,23 @@ function checkFormNumber(inputId, feedbackId, submitId) {
 }
 </script>
 <script>checkFormNumber('mifNumberInput','mifNumberFeedback','mifSubmitBtn');</script>
+
+<script>
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('item-select')) {
+        const sel = e.target;
+        const stock = parseFloat(sel.options[sel.selectedIndex]?.dataset.stock ?? 0);
+        const row = sel.closest('tr');
+        if (!row) return;
+        const qtyInput = row.querySelector('.qty-input');
+        const hint = row.querySelector('.stock-hint');
+        if (qtyInput) {
+            qtyInput.max = stock;
+            if (parseFloat(qtyInput.value) > stock) qtyInput.value = stock;
+        }
+        if (hint) hint.textContent = stock > 0 ? 'Available: ' + stock : 'Out of stock';
+    }
+});
+</script>
+
 @endsection
