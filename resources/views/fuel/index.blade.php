@@ -21,15 +21,21 @@
             <h1><i class="bi bi-fuel-pump me-2"></i>Fuel Records</h1>
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Petrol &amp; Diesel purchase tracking</p>
         </div>
-        
+        <a href="{{ route('fuel.export') }}" class="btn btn-outline-light fw-semibold me-2">
+            <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
+        </a>
         <div class="d-flex gap-2">
-            <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold me-2">
+            <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold">
                 <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
             </a>
-           
-        
+            <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold me-2">
+            <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
+        </a>
+        <a href="{{ route('fuel.export') }}" class="btn btn-outline-light fw-semibold me-2">
+            <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
+        </a>
         @if($canWrite)
-        <a href="{{ route('fuel.create') }}" class="btn btn-success fw-semibold me-2">
+        <a href="{{ route('fuel.create') }}" class="btn btn-light fw-semibold">
             <i class="bi bi-plus-circle me-2"></i>Add Fuel Record
         </a>
         @endif
@@ -181,7 +187,7 @@
                             </td>
                             <td class="text-center">
                                 @if($record->do_image)
-                                    <img src="{{ asset('storage/'.$record->do_image) }}"
+                                    <img src="{{ $record->do_image }}"
                                          class="do-thumb"
                                          alt="DO"
                                          data-bs-toggle="modal"
@@ -196,11 +202,11 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body text-center p-2">
-                                                    <img src="{{ asset('storage/'.$record->do_image) }}"
+                                                    <img src="{{ $record->do_image }}"
                                                          class="img-fluid rounded" style="max-height:80vh">
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <a href="{{ asset('storage/'.$record->do_image) }}"
+                                                    <a href="{{ $record->do_image }}"
                                                        download class="btn btn-sm btn-outline-primary">
                                                         <i class="bi bi-download me-1"></i>Download
                                                     </a>

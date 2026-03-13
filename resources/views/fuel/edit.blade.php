@@ -117,7 +117,7 @@
                     <div class="card-body p-4">
                         @if($fuel->do_image)
                         <div class="mb-3 p-3 rounded d-flex align-items-center gap-3" style="background:#f8f9fa;border:1px solid #dee2e6">
-                            <img src="{{ asset('storage/'.$fuel->do_image) }}"
+                            <img src="{{ $fuel->do_image }}"
                                  alt="Current DO" style="height:80px;border-radius:6px;border:1px solid #dee2e6">
                             <div>
                                 <p class="mb-1 fw-semibold small">Current DO Image</p>

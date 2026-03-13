@@ -69,8 +69,8 @@ class FuelController extends Controller
         ]);
 
         if ($request->hasFile('do_image')) {
-            $path = $request->file('do_image')->store('fuel-do', 'public');
-            $validated['do_image'] = $path;
+            $file = $request->file('do_image');
+            $validated['do_image'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file));
         }
 
         FuelRecord::create(array_merge($validated, ['project_id' => $this->pid()]));
@@ -120,9 +120,6 @@ class FuelController extends Controller
 
     public function destroy(FuelRecord $fuel)
     {
-        if ($fuel->do_image) {
-            Storage::disk('public')->delete($fuel->do_image);
-        }
         $fuel->delete();
         return redirect()->route('fuel.index')
             ->with('success', 'Fuel record deleted.');
@@ -131,7 +128,6 @@ class FuelController extends Controller
     public function deleteImage(FuelRecord $fuel)
     {
         if ($fuel->do_image) {
-            Storage::disk('public')->delete($fuel->do_image);
             $fuel->update(['do_image' => null]);
         }
         return back()->with('success', 'DO image removed.');

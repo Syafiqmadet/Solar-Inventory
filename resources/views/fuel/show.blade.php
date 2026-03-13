@@ -36,14 +36,14 @@
             <div class="card mt-4">
                 <div class="card-header bg-white py-3"><h6 class="mb-0"><i class="bi bi-image me-2 text-info"></i>DO Document</h6></div>
                 <div class="card-body text-center p-3">
-                    @php $ext = strtolower(pathinfo($fuel->do_image, PATHINFO_EXTENSION)); @endphp
+                    @php $isImage = str_starts_with($fuel->do_image ?? '', 'data:image'); @endphp
                     @if(in_array($ext, ['jpg','jpeg','png','webp']))
-                        <a href="{{ asset('storage/'.$fuel->do_image) }}" target="_blank">
-                            <img src="{{ asset('storage/'.$fuel->do_image) }}" style="max-width:100%;max-height:240px;border-radius:8px;border:2px solid #dee2e6" alt="DO" class="shadow-sm">
+                        <a href="{{ $fuel->do_image }}" target="_blank">
+                            <img src="{{ $fuel->do_image }}" style="max-width:100%;max-height:240px;border-radius:8px;border:2px solid #dee2e6" alt="DO" class="shadow-sm">
                         </a>
                         <p class="mt-2 mb-0 text-muted small">Click to open full size</p>
                     @else
-                        <a href="{{ asset('storage/'.$fuel->do_image) }}" target="_blank" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf me-2"></i>Open PDF</a>
+                        <a href="{{ $fuel->do_image }}" target="_blank" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf me-2"></i>Open PDF</a>
                     @endif
                 </div>
             </div>
