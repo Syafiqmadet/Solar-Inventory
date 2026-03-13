@@ -21,8 +21,14 @@
             <h1><i class="bi bi-fuel-pump me-2"></i>Fuel Records</h1>
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Petrol &amp; Diesel purchase tracking</p>
         </div>
-        
-            <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold me-2">
+        <a href="{{ route('fuel.export') }}" class="btn btn-outline-light fw-semibold me-2">
+            <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
+        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold">
+                <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
+            
+        <a href="{{ route('fuel.export') }}" class="btn btn-outline-light fw-semibold me-2">
             <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
         </a>
         @if($canWrite)
