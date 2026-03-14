@@ -13,11 +13,7 @@ class SubconMaterialReportExport implements WithMultipleSheets
     public function __construct(int $projectId)
     {
         $this->project = Project::find($projectId);
-        $this->subcons = Subcon::with([
-            'zone',
-            'mifs.items',
-            'mrfs.items',
-        ])
+        $this->subcons = Subcon::with(['zone', 'mifs.items', 'mrfs.items'])
             ->where('project_id', $projectId)
             ->orderBy('name')
             ->get();
@@ -25,17 +21,9 @@ class SubconMaterialReportExport implements WithMultipleSheets
 
     public function sheets(): array
     {
-        $sheets = [];
-
-        foreach ($this->subcons as $subcon) {
-            $hasMif = $subcon->mifs->flatMap->items->isNotEmpty();
-            $hasMrf = $subcon->mrfs->flatMap->items->isNotEmpty();
-
-            if ($hasMif || $hasMrf) {
-                $sheets[] = new SubconMaterialSheet($subcon, $this->project);
-            }
-        }
-
-        return $sheets ?: [new SubconMaterialEmptySheet()];
+        return [
+            new SubconMaterialSheet($this->subcons, $this->project, 'MIF'),
+            new SubconMaterialSheet($this->subcons, $this->project, 'MRF'),
+        ];
     }
 }
