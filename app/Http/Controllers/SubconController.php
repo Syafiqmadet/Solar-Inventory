@@ -12,6 +12,7 @@ use App\Models\IsolatedItem;
 use App\Models\StockTransaction;
 use App\Exports\SubconMifExport;
 use App\Exports\SubconMrfExport;
+use App\Exports\SubconMaterialReportExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -193,6 +194,14 @@ class SubconController extends Controller
         $mifs = $subcon->mifs()->with('items','issuedBy')->orderByDesc('date')->get();
         $filename = 'MIF_' . str_replace(' ', '_', $subcon->name) . '_' . now()->format('Y-m-d') . '.xlsx';
         return Excel::download(new SubconMifExport($subcon, $mifs), $filename);
+    }
+
+    public function materialReport()
+    {
+        $pid = $this->pid();
+        if (!$pid) return back()->with('error', 'No project selected.');
+        $filename = 'Material_Usage_Report_' . now()->format('Y-m-d') . '.xlsx';
+        return Excel::download(new SubconMaterialReportExport($pid), $filename);
     }
 
     // ── MRF ────────────────────────────────────────────────────────

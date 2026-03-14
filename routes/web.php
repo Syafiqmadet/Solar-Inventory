@@ -144,6 +144,7 @@ Route::middleware('auth')->group(function () {
         });
         // Static export routes BEFORE wildcard {mif}/{mrf} routes
         Route::get('subcon/check-number',            [SubconController::class, 'checkNumber'])->name('subcon.check.number');
+        Route::get('subcon/material-report',         [SubconController::class, 'materialReport'])->name('subcon.material.report');
         Route::get('subcon/{subcon}/mif/export', [SubconController::class, 'mifExport'])->name('subcon.mif.export');
         Route::get('subcon/{subcon}/mrf/export', [SubconController::class, 'mrfExport'])->name('subcon.mrf.export');
 
