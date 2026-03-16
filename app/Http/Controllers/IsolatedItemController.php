@@ -191,13 +191,9 @@ class IsolatedItemController extends Controller
     {
         $images = array_filter($isolated->proof_images ?? []);
 
-        if (count($images) <= 1) {
-            return back()->with('error', 'Cannot remove the last proof image.');
-        }
-
         if (isset($images[$index])) {
             unset($images[$index]);
-            $isolated->proof_images = array_values($images);
+            $isolated->proof_images = count($images) > 0 ? array_values($images) : null;
             $isolated->save();
         }
 
