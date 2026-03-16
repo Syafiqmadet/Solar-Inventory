@@ -144,10 +144,10 @@
                                 <div class="text-center position-relative">
                                     <img src="{{ $img }}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:zoom-in" alt="Proof {{ $idx+1 }}"
                                         onclick="document.getElementById('lb').style.display='flex';document.getElementById('lbImg').src='{{ $img }}'">
-                                    <form method="POST" action="{{ route('isolated.delete-proof', [$isolated, $idx]) }}" onsubmit="return confirm('Remove photo {{ $idx+1 }}?')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" style="position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;font-size:11px;padding:0;line-height:1" class="btn btn-danger btn-sm">✕</button>
-                                    </form>
+                                    <button type="button"
+                                        onclick="if(confirm('Remove photo {{ $idx+1 }}?')) document.getElementById('del-proof-{{ $idx }}').submit()"
+                                        style="position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;font-size:11px;padding:0;line-height:1"
+                                        class="btn btn-danger btn-sm">✕</button>
                                     <small class="text-muted d-block mt-1">Photo {{ $idx+1 }}</small>
                                 </div>
                                 @endif
