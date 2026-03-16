@@ -135,23 +135,29 @@
                     </div>
                     <div class="card-body p-4">
                         {{-- Existing images --}}
-                        @if($isolated->proof_images && count($isolated->proof_images) > 0)
+                        @if($isolated->proof_images && is_array($isolated->proof_images) && count($isolated->proof_images) > 0)
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Current Images</label>
+                            <label class="form-label fw-semibold">Current Images <small class="text-muted fw-normal">— click ✕ to remove, click photo to enlarge</small></label>
                             <div class="d-flex gap-3 flex-wrap">
                                 @foreach($isolated->proof_images as $idx => $img)
                                 @if($img)
                                 <div class="text-center position-relative">
-                                    <img src="{{ $img }}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6" alt="Proof {{ $idx+1 }}">
-                                    <div class="mt-1">
-                                        <label class="small text-muted d-block">Photo {{ $idx+1 }}</label>
-                                        <input type="checkbox" name="delete_proof[]" value="{{ $idx }}" class="form-check-input">
-                                        <label class="small text-danger">Remove</label>
-                                    </div>
+                                    <img src="{{ $img }}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:zoom-in" alt="Proof {{ $idx+1 }}"
+                                        onclick="document.getElementById('lb').style.display='flex';document.getElementById('lbImg').src='{{ $img }}'">
+                                    <form method="POST" action="{{ route('isolated.delete-proof', [$isolated, $idx]) }}" onsubmit="return confirm('Remove photo {{ $idx+1 }}?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" style="position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;font-size:11px;padding:0;line-height:1" class="btn btn-danger btn-sm">✕</button>
+                                    </form>
+                                    <small class="text-muted d-block mt-1">Photo {{ $idx+1 }}</small>
                                 </div>
                                 @endif
                                 @endforeach
                             </div>
+                        </div>
+                        {{-- Lightbox --}}
+                        <div id="lb" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center" onclick="this.style.display='none'">
+                            <img id="lbImg" src="" style="max-width:90vw;max-height:90vh;border-radius:8px">
+                            <div style="position:absolute;top:20px;right:30px;color:white;font-size:2rem;cursor:pointer" onclick="document.getElementById('lb').style.display='none'">✕</div>
                         </div>
                         @endif
 

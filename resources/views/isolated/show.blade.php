@@ -120,25 +120,14 @@
                         <div class="d-flex gap-3 flex-wrap">
                             @foreach($isolated->proof_images as $idx => $img)
                             @if($img)
-                            <div class="text-center position-relative proof-thumb-wrap">
+                            <div class="text-center">
                                 <img src="{{ $img }}"
                                     style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:zoom-in;transition:transform .2s"
                                     class="shadow-sm proof-thumb"
                                     data-src="{{ $img }}"
-                                    data-index="{{ $idx }}"
                                     alt="Proof {{ $idx + 1 }}"
                                     onmouseover="this.style.transform='scale(1.05)'"
                                     onmouseout="this.style.transform='scale(1)'">
-                                @if(auth()->user()->canWrite())
-                                <form method="POST" action="{{ route('isolated.delete-proof', [$isolated, $idx]) }}"
-                                    class="d-inline"
-                                    onsubmit="return confirm('Remove this photo?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                        style="position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;font-size:11px;padding:0;line-height:1"
-                                        class="btn btn-danger btn-sm">✕</button>
-                                </form>
-                                @endif
                                 <div class="small text-muted mt-1">Photo {{ $idx + 1 }}</div>
                             </div>
                             @endif
@@ -146,12 +135,11 @@
                         </div>
                     </div>
 
-                    {{-- Lightbox Modal --}}
+                    {{-- Lightbox --}}
                     <div id="lightbox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center" onclick="this.style.display='none'">
                         <img id="lightboxImg" src="" style="max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,0.5)">
                         <div style="position:absolute;top:20px;right:30px;color:white;font-size:2rem;cursor:pointer" onclick="document.getElementById('lightbox').style.display='none'">✕</div>
                     </div>
-
                     <script>
                     document.querySelectorAll('.proof-thumb').forEach(function(img) {
                         img.addEventListener('click', function() {
