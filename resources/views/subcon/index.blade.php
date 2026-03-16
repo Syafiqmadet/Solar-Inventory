@@ -10,6 +10,9 @@
         </div>
         <a href="{{ route('subcon.material.report') }}" class="btn btn-success fw-semibold me-2">
             <i class="bi bi-file-earmark-excel me-2"></i>Material Report
+        </a> 
+        <a href="{{ route('subcon.material.report') }}" class="btn btn-success fw-semibold me-2">
+            <i class="bi bi-file-earmark-excel me-2"></i>Material Report
         </a>
         @if($canWrite)
         <button class="btn btn-light fw-semibold" data-bs-toggle="modal" data-bs-target="#modalAddSubcon">
