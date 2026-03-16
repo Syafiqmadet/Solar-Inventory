@@ -68,8 +68,9 @@ Route::middleware('auth')->group(function () {
         Route::get('isolated/{isolated}',   [IsolatedItemController::class, 'show'])->name('isolated.show');
         Route::middleware('writer')->group(function () {
             Route::get('isolated/{isolated}/edit',  [IsolatedItemController::class, 'edit'])->name('isolated.edit');
-            Route::put('isolated/{isolated}',       [IsolatedItemController::class, 'update'])->name('isolated.update');
-            Route::delete('isolated/{isolated}',    [IsolatedItemController::class, 'destroy'])->name('isolated.destroy');
+            Route::put('isolated/{isolated}',                    [IsolatedItemController::class, 'update'])->name('isolated.update');
+            Route::delete('isolated/{isolated}',                 [IsolatedItemController::class, 'destroy'])->name('isolated.destroy');
+            Route::delete('isolated/{isolated}/proof/{index}',   [IsolatedItemController::class, 'deleteProof'])->name('isolated.delete-proof');
         });
 
         // ZONES

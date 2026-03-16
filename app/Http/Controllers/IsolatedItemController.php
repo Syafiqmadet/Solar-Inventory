@@ -186,4 +186,16 @@ class IsolatedItemController extends Controller
         return redirect()->route('isolated.index')
             ->with('success', 'Isolated item record deleted.');
     }
+
+    public function deleteProof(IsolatedItem $isolated, int $index)
+    {
+        $images = $isolated->proof_images ?? [];
+        if (isset($images[$index])) {
+            unset($images[$index]);
+            $isolated->proof_images = array_values($images);
+            $isolated->save();
+        }
+
+        return back()->with('success', 'Photo removed.');
+    }
 }
