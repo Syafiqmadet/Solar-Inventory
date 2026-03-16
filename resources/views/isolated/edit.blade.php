@@ -216,4 +216,15 @@ for (var i = 0; i < 3; i++) {
 // Submit handled normally
 </script>
 
+{{-- Proof image delete forms outside main form --}}
+@if($isolated->proof_images && is_array($isolated->proof_images))
+@foreach($isolated->proof_images as $idx => $img)
+@if($img)
+<form id="del-proof-{{ $idx }}" method="POST" action="{{ route('isolated.delete-proof', [$isolated, $idx]) }}" style="display:none">
+    @csrf @method('DELETE')
+</form>
+@endif
+@endforeach
+@endif
+
 @endsection
