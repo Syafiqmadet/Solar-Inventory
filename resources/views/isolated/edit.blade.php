@@ -157,19 +157,21 @@
 
                         {{-- Upload new images --}}
                         <label class="form-label fw-semibold">{{ $isolated->proof_images ? 'Add / Replace Images' : 'Upload Images' }}</label>
-                        <div class="d-flex gap-3 flex-wrap">
+                        <div class="d-flex gap-3 flex-wrap" id="proofSlots">
                             @for($i = 0; $i < 3; $i++)
-                            <div class="text-center">
-                                <label class="proof-label" style="cursor:pointer">
-                                    <input type="file" class="proof-file d-none" accept="image/*" data-index="{{ $i }}">
-                                    <input type="hidden" name="proof_images[]" class="proof-b64-{{ $i }}">
-                                    <div class="proof-preview-{{ $i }} border rounded d-flex align-items-center justify-content-center bg-light" style="width:100px;height:100px;font-size:2rem;border-style:dashed!important">📷</div>
-                                </label>
+                            <div class="text-center" id="proof-slot-{{ $i }}">
+                                <div class="proof-preview-{{ $i }} border rounded d-flex align-items-center justify-content-center bg-light" 
+                                     style="width:100px;height:100px;font-size:2rem;border-style:dashed!important;cursor:pointer"
+                                     onclick="document.getElementById('proof-input-{{ $i }}').click()">📷</div>
+                                <input type="file" id="proof-input-{{ $i }}" class="d-none" accept="image/*" data-index="{{ $i }}">
                                 <small class="text-muted d-block mt-1">Photo {{ $i+1 }}</small>
                             </div>
                             @endfor
                         </div>
-                        <small class="text-muted mt-2 d-block">Click a 📷 slot to upload. Images are stored as base64.</small>
+                        <input type="hidden" name="proof_images[]" id="proof-b64-0" value="">
+                        <input type="hidden" name="proof_images[]" id="proof-b64-1" value="">
+                        <input type="hidden" name="proof_images[]" id="proof-b64-2" value="">
+                        <small class="text-muted mt-2 d-block">Click a 📷 slot to upload a photo.</small>
                     </div>
                 </div>
 
@@ -185,27 +187,32 @@
 </div>
 
 <script>
-// Use event delegation on document for file inputs
-document.addEventListener('change', function(e) {
-    if (!e.target.classList.contains('proof-file')) return;
-    if (!e.target.files || !e.target.files[0]) return;
-    const idx     = e.target.dataset.index;
-    const b64     = document.querySelector('.proof-b64-' + idx);
-    const preview = document.querySelector('.proof-preview-' + idx);
-    const reader  = new FileReader();
-    reader.onload = function(ev) {
-        b64.value = ev.target.result;
-        preview.innerHTML = '<img src="' + ev.target.result + '" style="width:100px;height:100px;object-fit:cover;border-radius:6px">';
-        console.log('Image loaded for slot', idx, 'b64 length:', b64.value.length);
-    };
-    reader.readAsDataURL(e.target.files[0]);
-});
+// Bind file inputs for proof images
+for (var i = 0; i < 3; i++) {
+    (function(idx) {
+        var fileInput = document.getElementById('proof-input-' + idx);
+        if (!fileInput) return;
+        fileInput.addEventListener('change', function() {
+            if (!this.files || !this.files[0]) return;
+            var b64Input = document.getElementById('proof-b64-' + idx);
+            var preview  = document.querySelector('.proof-preview-' + idx);
+            var reader   = new FileReader();
+            reader.onload = function(ev) {
+                b64Input.value = ev.target.result;
+                preview.innerHTML = '<img src="' + ev.target.result + '" style="width:100px;height:100px;object-fit:cover;border-radius:6px">';
+                console.log('Proof ' + idx + ' loaded, length=' + b64Input.value.length);
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+    })(i);
+}
 
-// Disable empty proof inputs before submit
-document.addEventListener('submit', function(e) {
-    document.querySelectorAll('input[name="proof_images[]"]').forEach(function(input) {
-        if (!input.value) input.disabled = true;
-    });
+// Before submit — disable empty slots so they don't send empty strings
+document.querySelector('form').addEventListener('submit', function() {
+    for (var i = 0; i < 3; i++) {
+        var inp = document.getElementById('proof-b64-' + i);
+        if (inp && !inp.value) inp.disabled = true;
+    }
 });
 </script>
 

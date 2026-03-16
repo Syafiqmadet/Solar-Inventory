@@ -110,8 +110,7 @@ class IsolatedItemController extends Controller
             'status'        => 'required|in:isolated,scrapped,repaired',
             'part_number'   => 'nullable|string|max:100',
             'reason'        => 'nullable|string',
-            'proof_images'  => 'nullable|array|max:3',
-            'proof_images.*'=> 'nullable|string',
+            'proof_images'  => 'nullable|array',
         ]);
 
         DB::transaction(function () use ($request, $isolated) {
@@ -129,13 +128,13 @@ class IsolatedItemController extends Controller
             // Handle proof images — keep existing if no new ones uploaded
             $proofImages = $isolated->proof_images ?? [];
 
-            // Merge incoming images (only non-empty base64 strings)
-            $incoming = array_values(array_filter(
-                array_map('trim', $request->input('proof_images', [])),
-                fn($v) => strlen($v) > 100 // valid base64 is long
+            // Merge incoming images
+            $rawImages = $request->input('proof_images', []);
+            $incoming  = array_values(array_filter(
+                array_map('trim', is_array($rawImages) ? $rawImages : []),
+                fn($v) => str_starts_with($v, 'data:image/')
             ));
             if (count($incoming) > 0) {
-                // Replace existing with new uploads
                 $proofImages = $incoming;
             }
 
