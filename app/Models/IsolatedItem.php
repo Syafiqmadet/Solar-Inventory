@@ -7,11 +7,12 @@ class IsolatedItem extends Model
 {
     protected $fillable = [
         'project_id', 'item_id', 'name', 'part_number', 'quantity',
-        'type', 'reason', 'isolated_date', 'status', 'notes',
+        'type', 'reason', 'isolated_date', 'status', 'notes', 'proof_images',
     ];
 
     protected $casts = [
         'isolated_date' => 'date',
+        'proof_images'  => 'json',
     ];
 
     public function item()
@@ -48,5 +49,6 @@ class IsolatedItem extends Model
             default    => ucfirst($this->status),
         };
     }
+
     public function project() { return $this->belongsTo(Project::class); }
 }

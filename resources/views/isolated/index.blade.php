@@ -159,7 +159,7 @@
                             </td>
                             <td class="text-muted small" style="max-width:200px">
                                 {{ Str::limit($record->reason, 50) ?: '—' }}
-                                @if($record->proof_images && count($record->proof_images) > 0)
+                                @if($record->proof_images && is_array($record->proof_images) && count($record->proof_images) > 0)
                                 <div class="d-flex gap-1 mt-1 flex-wrap">
                                     @foreach($record->proof_images as $img)
                                     @if($img)

@@ -114,7 +114,7 @@
                     </div>
                     @endif
 
-                    @if($isolated->proof_images && count($isolated->proof_images) > 0)
+                    @if($isolated->proof_images && is_array($isolated->proof_images) && count($isolated->proof_images) > 0)
                     <div class="mb-4">
                         <div class="text-muted small fw-semibold text-uppercase mb-2">📷 Proof Images ({{ count($isolated->proof_images) }})</div>
                         <div class="d-flex gap-3 flex-wrap">
