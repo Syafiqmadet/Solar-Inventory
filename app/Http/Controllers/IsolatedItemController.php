@@ -28,7 +28,9 @@ class IsolatedItemController extends Controller
         if ($request->date_from) $query->whereDate('isolated_date', '>=', $request->date_from);
         if ($request->date_to)   $query->whereDate('isolated_date', '<=', $request->date_to);
 
-        $isolated = $query->latest('isolated_date')->paginate(15)->withQueryString();
+        $isolated = $query->latest('isolated_date')
+            ->select(['id','project_id','item_id','name','part_number','quantity','type','reason','isolated_date','status','notes','created_at','updated_at'])
+            ->paginate(15)->withQueryString();
 
         $stats = [
             'total'    => IsolatedItem::query()->tap(fn($q) => $this->pidFilter($q))->count(),
