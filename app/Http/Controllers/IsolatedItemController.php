@@ -189,7 +189,12 @@ class IsolatedItemController extends Controller
 
     public function deleteProof(IsolatedItem $isolated, int $index)
     {
-        $images = $isolated->proof_images ?? [];
+        $images = array_filter($isolated->proof_images ?? []);
+
+        if (count($images) <= 1) {
+            return back()->with('error', 'Cannot remove the last proof image.');
+        }
+
         if (isset($images[$index])) {
             unset($images[$index]);
             $isolated->proof_images = array_values($images);

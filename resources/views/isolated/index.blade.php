@@ -119,6 +119,7 @@
                             <th>Part Number</th>
                             <th class="text-center">Qty</th>
                             <th>Type</th>
+                            <th>MRF No.</th>
                             <th>Reason</th>
                             <th>Status</th>
                             <th class="px-3">Actions</th>
@@ -169,6 +170,17 @@
                                     @endif
                                     @endforeach
                                 </div>
+                                @endif
+                            </td>
+                            <td class="small">
+                                @php
+                                    preg_match('/MRF (\S+)/', $record->reason ?? '', $mrfMatch);
+                                    $mrfNo = $mrfMatch[1] ?? null;
+                                @endphp
+                                @if($mrfNo)
+                                    <span class="badge bg-info text-dark">{{ $mrfNo }}</span>
+                                @else
+                                    <span class="text-muted">—</span>
                                 @endif
                             </td>
                             <td>

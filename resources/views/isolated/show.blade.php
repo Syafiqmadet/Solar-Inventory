@@ -98,6 +98,16 @@
                 <div class="card-body p-4">
                     <div class="mb-4">
                         <div class="text-muted small fw-semibold text-uppercase mb-2">Reason / Description</div>
+                        @php
+                            preg_match('/MRF (\S+)/', $isolated->reason ?? '', $mrfMatch);
+                            $mrfNo = $mrfMatch[1] ?? null;
+                        @endphp
+                        @if($mrfNo)
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold text-uppercase mb-2">MRF Reference</div>
+                            <span class="badge bg-info text-dark fs-6 px-3 py-2">📋 {{ $mrfNo }}</span>
+                        </div>
+                        @endif
                         @if($isolated->reason)
                             <div class="p-3 rounded" style="background:#f8f9fa;border-left:4px solid {{ $isolated->type==='defect' ? '#ffc107' : '#dc3545' }}">
                                 {{ $isolated->reason }}
