@@ -207,13 +207,7 @@ for (var i = 0; i < 3; i++) {
     })(i);
 }
 
-// Before submit — disable empty slots so they don't send empty strings
-document.querySelector('form').addEventListener('submit', function() {
-    for (var i = 0; i < 3; i++) {
-        var inp = document.getElementById('proof-b64-' + i);
-        if (inp && !inp.value) inp.disabled = true;
-    }
-});
+// Submit handled normally
 </script>
 
 @endsection

@@ -128,12 +128,10 @@ class IsolatedItemController extends Controller
             // Handle proof images — keep existing if no new ones uploaded
             $proofImages = $isolated->proof_images ?? [];
 
-            // Merge incoming images
+            // Merge incoming images — filter empty strings and keep only valid base64
             $rawImages = $request->input('proof_images', []);
-            $incoming  = array_values(array_filter(
-                array_map('trim', is_array($rawImages) ? $rawImages : []),
-                fn($v) => str_starts_with($v, 'data:image/')
-            ));
+            if (!is_array($rawImages)) $rawImages = [];
+            $incoming = array_values(array_filter($rawImages, fn($v) => !empty(trim($v))));
             if (count($incoming) > 0) {
                 $proofImages = $incoming;
             }
