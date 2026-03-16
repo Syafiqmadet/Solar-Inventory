@@ -10,7 +10,7 @@
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Defective or damaged items quarantined from inventory</p>
         </div>
         @if($canWrite)
-        <a href="{{ route('isolated.create') }}" class="btn btn-success fw-semibold me-2">
+        <a href="{{ route('isolated.create') }}" class="btn btn-light fw-semibold">
             <i class="bi bi-plus-circle me-2"></i>Isolate Item
         </a>
         @endif
@@ -159,6 +159,17 @@
                             </td>
                             <td class="text-muted small" style="max-width:200px">
                                 {{ Str::limit($record->reason, 50) ?: '—' }}
+                                @if($record->proof_images && count($record->proof_images) > 0)
+                                <div class="d-flex gap-1 mt-1 flex-wrap">
+                                    @foreach($record->proof_images as $img)
+                                    @if($img)
+                                    <a href="{{ $img }}" target="_blank">
+                                        <img src="{{ $img }}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;border:1px solid #dee2e6" title="Proof image">
+                                    </a>
+                                    @endif
+                                    @endforeach
+                                </div>
+                                @endif
                             </td>
                             <td>
                                 @if($record->status === 'isolated')

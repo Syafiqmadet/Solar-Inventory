@@ -110,6 +110,8 @@ class IsolatedItemController extends Controller
             'status'        => 'required|in:isolated,scrapped,repaired',
             'part_number'   => 'nullable|string|max:100',
             'reason'        => 'nullable|string',
+            'proof_images'  => 'nullable|array|max:3',
+            'proof_images.*'=> 'nullable|string',
         ]);
 
         DB::transaction(function () use ($request, $isolated) {
@@ -124,6 +126,22 @@ class IsolatedItemController extends Controller
                 if ($oldItem) $oldItem->increment('current_stock', $oldQty);
             }
 
+            // Handle proof images — keep existing if no new ones uploaded
+            $proofImages = $isolated->proof_images ?? [];
+            if ($request->has('proof_images')) {
+                $incoming = array_values(array_filter(array_map('trim', $request->proof_images ?? [])));
+                if (count($incoming) > 0) {
+                    $proofImages = $incoming;
+                }
+            }
+            // Handle individual slot deletions
+            if ($request->has('delete_proof')) {
+                foreach ($request->delete_proof as $idx) {
+                    unset($proofImages[$idx]);
+                }
+                $proofImages = array_values($proofImages);
+            }
+
             $isolated->update([
                 'item_id'       => $newItemId,
                 'name'          => $request->name,
@@ -134,6 +152,7 @@ class IsolatedItemController extends Controller
                 'isolated_date' => $request->isolated_date,
                 'status'        => $request->status,
                 'notes'         => $request->notes,
+                'proof_images'  => count($proofImages) > 0 ? $proofImages : null,
             ]);
 
             // Apply new deduction

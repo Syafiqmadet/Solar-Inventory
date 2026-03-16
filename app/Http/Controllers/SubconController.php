@@ -260,6 +260,8 @@ class SubconController extends Controller
             'rows.*.unit'           => 'nullable|string|max:50',
             'rows.*.condition'      => 'required|in:good,damaged,defect',
             'rows.*.remarks'        => 'nullable|string',
+            'rows.*.proof_images'   => 'nullable|array|max:3',
+            'rows.*.proof_images.*' => 'nullable|string',
         ], [
             'mrf_number.unique' => 'This MRF number already exists. Each MIF and MRF number must be unique.',
         ]);
@@ -289,16 +291,19 @@ class SubconController extends Controller
             ]);
 
             foreach ($request->rows as $row) {
+                $proofImages = array_filter(array_map('trim', $row['proof_images'] ?? []));
+
                 SubconMrfItem::create([
-                    'mrf_id'      => $mrf->id,
-                    'title'       => $row['title'] ?? null,
-                    'item_id'     => $row['item_id'] ?? null,
-                    'item_name'   => $row['item_name'],
-                    'part_number' => $row['part_number'] ?? null,
-                    'quantity'    => $row['quantity'],
-                    'unit'        => $row['unit'] ?? null,
-                    'condition'   => $row['condition'],
-                    'remarks'     => $row['remarks'] ?? null,
+                    'mrf_id'        => $mrf->id,
+                    'title'         => $row['title'] ?? null,
+                    'item_id'       => $row['item_id'] ?? null,
+                    'item_name'     => $row['item_name'],
+                    'part_number'   => $row['part_number'] ?? null,
+                    'quantity'      => $row['quantity'],
+                    'unit'          => $row['unit'] ?? null,
+                    'condition'     => $row['condition'],
+                    'remarks'       => $row['remarks'] ?? null,
+                    'proof_images'  => count($proofImages) > 0 ? array_values($proofImages) : null,
                 ]);
 
                 if ($row['condition'] === 'good' && !empty($row['item_id'])) {
@@ -332,6 +337,7 @@ class SubconController extends Controller
                         'notes'         => $row['remarks'] ?? null,
                         'isolated_date' => $request->date,
                         'project_id'    => $this->pid(),
+                        'proof_images'  => count($proofImages) > 0 ? array_values($proofImages) : null,
                     ]);
 
                     // Zone stock OUT — item leaves zone to isolated

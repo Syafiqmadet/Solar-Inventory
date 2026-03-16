@@ -82,7 +82,7 @@
                             <div class="col-12">
                                 <div id="rateDisplay" class="p-2 rounded text-center" style="background:#f0f9ff;border:1px solid #bee3f8">
                                     <span class="text-muted small">Price per liter: </span>
-                                    <span id="rateValue" class="fw-bold text-primary">RM {{ number_format($fuel->price_per_liter,4) }}</span>
+                                    <span id="rateValue" class="fw-bold text-primary">RM {{ number_format($fuel->price_per_liter,2) }}</span>
                                     <span class="text-muted small"> /L</span>
                                 </div>
                             </div>
@@ -170,7 +170,7 @@
 function calcRate() {
     const L = parseFloat(document.getElementById('liters').value)||0;
     const RM = parseFloat(document.getElementById('amount_rm').value)||0;
-    document.getElementById('rateValue').textContent = (L>0&&RM>0) ? 'RM '+(RM/L).toFixed(4) : 'RM —';
+    document.getElementById('rateValue').textContent = (L>0&&RM>0) ? 'RM '+(RM/L).toFixed(2) : 'RM —';
 }
 document.getElementById('liters').addEventListener('input',calcRate);
 document.getElementById('amount_rm').addEventListener('input',calcRate);

@@ -114,6 +114,27 @@
                     </div>
                     @endif
 
+                    @if($isolated->proof_images && count($isolated->proof_images) > 0)
+                    <div class="mb-4">
+                        <div class="text-muted small fw-semibold text-uppercase mb-2">📷 Proof Images ({{ count($isolated->proof_images) }})</div>
+                        <div class="d-flex gap-3 flex-wrap">
+                            @foreach($isolated->proof_images as $idx => $img)
+                            @if($img)
+                            <div class="text-center">
+                                <a href="{{ $img }}" target="_blank">
+                                    <img src="{{ $img }}"
+                                        style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:pointer"
+                                        class="shadow-sm"
+                                        alt="Proof {{ $idx + 1 }}">
+                                </a>
+                                <div class="small text-muted mt-1">Photo {{ $idx + 1 }}</div>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
                     <hr>
 
                     <div class="row g-2 text-muted small">

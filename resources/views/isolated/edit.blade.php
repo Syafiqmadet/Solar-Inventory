@@ -128,6 +128,51 @@
                     </div>
                 </div>
 
+
+                <div class="card mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="mb-0"><i class="bi bi-camera me-2"></i>Proof Images <span class="text-muted fw-normal small">(up to 3 photos)</span></h6>
+                    </div>
+                    <div class="card-body p-4">
+                        {{-- Existing images --}}
+                        @if($isolated->proof_images && count($isolated->proof_images) > 0)
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Current Images</label>
+                            <div class="d-flex gap-3 flex-wrap">
+                                @foreach($isolated->proof_images as $idx => $img)
+                                @if($img)
+                                <div class="text-center position-relative">
+                                    <img src="{{ $img }}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6" alt="Proof {{ $idx+1 }}">
+                                    <div class="mt-1">
+                                        <label class="small text-muted d-block">Photo {{ $idx+1 }}</label>
+                                        <input type="checkbox" name="delete_proof[]" value="{{ $idx }}" class="form-check-input">
+                                        <label class="small text-danger">Remove</label>
+                                    </div>
+                                </div>
+                                @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- Upload new images --}}
+                        <label class="form-label fw-semibold">{{ $isolated->proof_images ? 'Add / Replace Images' : 'Upload Images' }}</label>
+                        <div class="d-flex gap-3 flex-wrap">
+                            @for($i = 0; $i < 3; $i++)
+                            <div class="text-center">
+                                <label class="proof-label" style="cursor:pointer">
+                                    <input type="file" class="proof-file d-none" accept="image/*" data-index="{{ $i }}">
+                                    <input type="hidden" name="proof_images[]" class="proof-b64-{{ $i }}">
+                                    <div class="proof-preview-{{ $i }} border rounded d-flex align-items-center justify-content-center bg-light" style="width:100px;height:100px;font-size:2rem;border-style:dashed!important">📷</div>
+                                </label>
+                                <small class="text-muted d-block mt-1">Photo {{ $i+1 }}</small>
+                            </div>
+                            @endfor
+                        </div>
+                        <small class="text-muted mt-2 d-block">Click a 📷 slot to upload. Images are stored as base64.</small>
+                    </div>
+                </div>
+
                 <div class="d-flex gap-2 justify-content-end">
                     <a href="{{ route('isolated.index') }}" class="btn btn-outline-secondary">Cancel</a>
                     <button type="submit" class="btn btn-solar px-4">
@@ -138,4 +183,22 @@
         </div>
     </div>
 </div>
+
+<script>
+document.querySelectorAll('.proof-file').forEach(function(input) {
+    input.addEventListener('change', function() {
+        if (!this.files[0]) return;
+        const idx     = this.dataset.index;
+        const b64     = document.querySelector('.proof-b64-' + idx);
+        const preview = document.querySelector('.proof-preview-' + idx);
+        const reader  = new FileReader();
+        reader.onload = function(ev) {
+            b64.value = ev.target.result;
+            preview.innerHTML = '<img src="' + ev.target.result + '" style="width:100px;height:100px;object-fit:cover;border-radius:6px">';
+        };
+        reader.readAsDataURL(this.files[0]);
+    });
+});
+</script>
+
 @endsection

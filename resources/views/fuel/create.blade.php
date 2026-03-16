@@ -189,7 +189,7 @@ function calcRate() {
     const val  = document.getElementById('rateValue');
     if (L > 0 && RM > 0) {
         disp.classList.remove('d-none');
-        val.textContent = 'RM ' + (RM / L).toFixed(4);
+        val.textContent = 'RM ' + (RM / L).toFixed(2);
     } else {
         disp.classList.add('d-none');
     }

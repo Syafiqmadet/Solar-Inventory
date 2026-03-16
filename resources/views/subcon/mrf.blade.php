@@ -196,6 +196,7 @@
                                 <th style="width:8%">Unit</th>
                                 <th style="width:13%">Condition <span class="text-danger">*</span></th>
                                 <th>Remarks</th>
+                                <th style="width:160px">Proof Images <small class="text-muted">(damaged/defect)</small></th>
                                 <th style="width:40px"></th>
                             </tr>
                         </thead>
@@ -223,6 +224,28 @@
                                     </select>
                                 </td>
                                 <td><input type="text" name="rows[0][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
+                                <td class="proof-cell">
+                                    <div class="proof-upload d-none">
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            <label class="proof-thumb-label" title="Image 1">
+                                                <input type="file" class="proof-file d-none" accept="image/*">
+                                                <input type="hidden" name="rows[0][proof_images][]" class="proof-b64">
+                                                <div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div>
+                                            </label>
+                                            <label class="proof-thumb-label" title="Image 2">
+                                                <input type="file" class="proof-file d-none" accept="image/*">
+                                                <input type="hidden" name="rows[0][proof_images][]" class="proof-b64">
+                                                <div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div>
+                                            </label>
+                                            <label class="proof-thumb-label" title="Image 3">
+                                                <input type="file" class="proof-file d-none" accept="image/*">
+                                                <input type="hidden" name="rows[0][proof_images][]" class="proof-b64">
+                                                <div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div>
+                                            </label>
+                                        </div>
+                                        <small class="text-muted">Max 3 photos</small>
+                                    </div>
+                                </td>
                                 <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-x"></i></button></td>
                             </tr>
                         </tbody>
@@ -261,14 +284,46 @@ function bindMrfRow(row) {
         }
     });
     row.querySelector('.condition-select').addEventListener('change', function() {
-        row.style.background = ['damaged','defect'].includes(this.value) ? '#fff5f5' : '';
+        const isDmg = ['damaged','defect'].includes(this.value);
+        row.style.background = isDmg ? '#fff5f5' : '';
+        const proofDiv = row.querySelector('.proof-upload');
+        if (proofDiv) proofDiv.classList.toggle('d-none', !isDmg);
+    });
+    // Bind proof file inputs
+    row.querySelectorAll('.proof-thumb-label').forEach(label => {
+        const fileInput = label.querySelector('.proof-file');
+        const b64Input  = label.querySelector('.proof-b64');
+        const preview   = label.querySelector('.proof-preview');
+        fileInput.addEventListener('change', function() {
+            if (!this.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                b64Input.value = ev.target.result;
+                preview.innerHTML = '<img src="' + ev.target.result + '" style="width:44px;height:44px;object-fit:cover;border-radius:4px">';
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
     });
     row.querySelector('.remove-row').addEventListener('click', function() {
         if (document.querySelectorAll('.mrf-row').length > 1) this.closest('tr').remove();
     });
 }
 
+// Bind on page load
 bindMrfRow(document.querySelector('.mrf-row'));
+
+// Re-bind when modal opens to ensure DOM is ready
+document.getElementById('modalMrf').addEventListener('shown.bs.modal', function() {
+    document.querySelectorAll('.mrf-row').forEach(row => {
+        // Remove old listeners by cloning condition-select
+        const oldSel = row.querySelector('.condition-select');
+        if (oldSel) {
+            const newSel = oldSel.cloneNode(true);
+            oldSel.parentNode.replaceChild(newSel, oldSel);
+        }
+        bindMrfRow(row);
+    });
+});
 
 document.getElementById('addMrfRow').addEventListener('click', function() {
     const tbody = document.getElementById('mrfRows');
@@ -294,6 +349,16 @@ document.getElementById('addMrfRow').addEventListener('click', function() {
             </select>
         </td>
         <td><input type="text" name="rows[${idx}][remarks]" class="form-control form-control-sm" placeholder="Optional"></td>
+        <td class="proof-cell">
+            <div class="proof-upload d-none">
+                <div class="d-flex gap-1 flex-wrap">
+                    <label class="proof-thumb-label"><input type="file" class="proof-file d-none" accept="image/*"><input type="hidden" name="rows[${idx}][proof_images][]" class="proof-b64"><div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div></label>
+                    <label class="proof-thumb-label"><input type="file" class="proof-file d-none" accept="image/*"><input type="hidden" name="rows[${idx}][proof_images][]" class="proof-b64"><div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div></label>
+                    <label class="proof-thumb-label"><input type="file" class="proof-file d-none" accept="image/*"><input type="hidden" name="rows[${idx}][proof_images][]" class="proof-b64"><div class="proof-preview border rounded d-flex align-items-center justify-content-center bg-light" style="width:44px;height:44px;cursor:pointer;font-size:18px">📷</div></label>
+                </div>
+                <small class="text-muted">Max 3 photos</small>
+            </div>
+        </td>
         <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-x"></i></button></td>
     `;
     tbody.appendChild(tr);

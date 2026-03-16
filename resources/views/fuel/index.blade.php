@@ -21,18 +21,16 @@
             <h1><i class="bi bi-fuel-pump me-2"></i>Fuel Records</h1>
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Petrol &amp; Diesel purchase tracking</p>
         </div>
-        
         <div class="d-flex gap-2">
             <a href="{{ route('fuel.export') }}" class="btn btn-success fw-semibold me-2">
                 <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
-            
-        
-        @if($canWrite)
-        <a href="{{ route('fuel.create') }}" class="btn btn-success fw-semibold me-2">
-            <i class="bi bi-plus-circle me-2"></i>Add Fuel Record
-        </a>
-        @endif
-    </div>
+            </a>
+            @if($canWrite)
+            <a href="{{ route('fuel.create') }}" class="btn btn-success fw-semibold me-2">
+                <i class="bi bi-plus-circle me-2"></i>Add Fuel Record
+            </a>
+            @endif
+        </div>
 </div>
 
 <div class="content-area">
@@ -170,7 +168,7 @@
                             </td>
                             <td class="text-end fw-bold">{{ number_format($record->liters, 2) }}</td>
                             <td class="text-end fw-bold text-success">RM {{ number_format($record->amount_rm, 2) }}</td>
-                            <td class="text-end text-muted small">{{ number_format($record->price_per_liter, 4) }}</td>
+                            <td class="text-end text-muted small">{{ number_format($record->price_per_liter,2) }}</td>
                             <td>
                                 @if($record->do_number)
                                     <code class="small text-dark">{{ $record->do_number }}</code>

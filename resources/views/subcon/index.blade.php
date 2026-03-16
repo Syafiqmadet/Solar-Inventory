@@ -8,17 +8,16 @@
             <h1><i class="bi bi-people me-2"></i>Subcontractors</h1>
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Manage subcontractors, material issue and return forms</p>
         </div>
-        <a href="{{ route('subcon.material.report') }}" class="btn btn-success fw-semibold me-2">
-            <i class="bi bi-file-earmark-excel me-2"></i>Material Report
-        </a> 
-        <a href="{{ route('subcon.material.report') }}" class="btn btn-success fw-semibold me-2">
-            <i class="bi bi-file-earmark-excel me-2"></i>Material Report
-        </a>
-        @if($canWrite)
-        <button class="btn btn-light fw-semibold" data-bs-toggle="modal" data-bs-target="#modalAddSubcon">
-            <i class="bi bi-plus-circle me-2"></i>Add Subcon
-        </button>
-        @endif
+        <div class="d-flex gap-2">
+            <a href="{{ route('subcon.material.report') }}" class="btn btn-success fw-semibold me-2">
+                <i class="bi bi-file-earmark-excel me-2"></i>Material Report
+            </a>
+            @if($canWrite)
+            <button class="btn btn-success fw-semibold me-2" data-bs-toggle="modal" data-bs-target="#modalAddSubcon">
+                <i class="bi bi-plus-circle me-2"></i>Add Subcon
+            </button>
+            @endif
+        </div>
     </div>
 </div>
 

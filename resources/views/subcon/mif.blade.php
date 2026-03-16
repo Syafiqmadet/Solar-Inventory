@@ -20,7 +20,7 @@
                 <i class="bi bi-file-earmark-excel me-2"></i>Export Excel
             </a>
             @if($canWrite)
-            <button class="btn btn-light fw-semibold" data-bs-toggle="modal" data-bs-target="#modalMif">
+            <button class="btn btn-success fw-semibold" data-bs-toggle="modal" data-bs-target="#modalMif">
                 <i class="bi bi-plus-circle me-2"></i>New MIF
             </button>
             @endif

@@ -11,6 +11,7 @@ class FuelReportExport implements WithMultipleSheets
     {
         return [
             new SummarySheet($this->projectId),
+            new FuelMonthlyAverageSheet($this->projectId),
             new FuelUsageSheet('petrol', $this->projectId),
             new FuelUsageSheet('diesel', $this->projectId),
             new FuelPurchasesSheet($this->projectId),
