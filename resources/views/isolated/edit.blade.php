@@ -185,18 +185,27 @@
 </div>
 
 <script>
-document.querySelectorAll('.proof-file').forEach(function(input) {
-    input.addEventListener('change', function() {
-        if (!this.files[0]) return;
-        const idx     = this.dataset.index;
-        const b64     = document.querySelector('.proof-b64-' + idx);
-        const preview = document.querySelector('.proof-preview-' + idx);
-        const reader  = new FileReader();
-        reader.onload = function(ev) {
-            b64.value = ev.target.result;
-            preview.innerHTML = '<img src="' + ev.target.result + '" style="width:100px;height:100px;object-fit:cover;border-radius:6px">';
-        };
-        reader.readAsDataURL(this.files[0]);
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.proof-file').forEach(function(input) {
+        input.addEventListener('change', function() {
+            if (!this.files[0]) return;
+            const idx     = this.dataset.index;
+            const b64     = document.querySelector('.proof-b64-' + idx);
+            const preview = document.querySelector('.proof-preview-' + idx);
+            const reader  = new FileReader();
+            reader.onload = function(ev) {
+                b64.value = ev.target.result;
+                preview.innerHTML = '<img src="' + ev.target.result + '" style="width:100px;height:100px;object-fit:cover;border-radius:6px">';
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+    });
+
+    // Remove empty proof_images before submit so they don't override existing
+    document.querySelector('form').addEventListener('submit', function() {
+        document.querySelectorAll('input[name="proof_images[]"]').forEach(function(input) {
+            if (!input.value) input.disabled = true;
+        });
     });
 });
 </script>

@@ -128,16 +128,21 @@ class IsolatedItemController extends Controller
 
             // Handle proof images — keep existing if no new ones uploaded
             $proofImages = $isolated->proof_images ?? [];
-            if ($request->has('proof_images')) {
-                $incoming = array_values(array_filter(array_map('trim', $request->proof_images ?? [])));
-                if (count($incoming) > 0) {
-                    $proofImages = $incoming;
-                }
+
+            // Merge incoming images (only non-empty base64 strings)
+            $incoming = array_values(array_filter(
+                array_map('trim', $request->input('proof_images', [])),
+                fn($v) => strlen($v) > 100 // valid base64 is long
+            ));
+            if (count($incoming) > 0) {
+                // Replace existing with new uploads
+                $proofImages = $incoming;
             }
+
             // Handle individual slot deletions
             if ($request->has('delete_proof')) {
                 foreach ($request->delete_proof as $idx) {
-                    unset($proofImages[$idx]);
+                    unset($proofImages[(int)$idx]);
                 }
                 $proofImages = array_values($proofImages);
             }
