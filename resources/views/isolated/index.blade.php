@@ -10,7 +10,7 @@
             <p class="mb-0 mt-1" style="color:rgba(255,255,255,0.85)">Defective or damaged items quarantined from inventory</p>
         </div>
         @if($canWrite)
-        <a href="{{ route('isolated.create') }}" class="btn btn-light fw-semibold">
+        <a href="{{ route('isolated.create') }}" class="btn btn-success fw-semibold">
             <i class="bi bi-plus-circle me-2"></i>Isolate Item
         </a>
         @endif
